@@ -24,7 +24,7 @@ export default function ServicePageTemplate({
   highlights?: { risks?: string[]; helps?: string[]; reasons?: string[] };
 }) {
   return (
-    <div className="min-h-screen w-full relative overflow-hidden text-white">
+    <div className="min-h-screen w-full relative overflow-hidden text-white bg-black">
       <Header activePath={activePath} />
 
       <div className="mx-auto max-w-6xl px-5 py-14">
