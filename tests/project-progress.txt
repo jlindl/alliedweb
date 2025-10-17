@@ -1,0 +1,83 @@
+Project scan and progress report for allied-website
+Date: 2025-09-24
+
+Summary
+-------
+This report inventories the repository, current Git status, what's done, and recommended next steps.
+
+Project root files (not exhaustive):
+- .git/
+- .gitignore
+- .next/
+- eslint.config.mjs
+- LLM.txt
+- next-env.d.ts
+- next.config.ts
+- package-lock.json
+- package.json
+- postcss.config.mjs
+- public/
+- README.md
+- scripts/
+- src/
+- tsconfig.json
+
+Key source folders:
+- src/app: contains Next.js app pages and layout (many pages under insurance-services)
+- src/components: UI components (Header, Footer, StayInTouch, etc.)
+- src/lib: small helper (rss.ts)
+
+Git status (summary)
+--------------------
+- Repository initialized (branch: master).
+- Many new/uncommitted files are staged as added (A) or modified (M). See Git for full list.
+
+What's done
+-----------
+- Next.js app skeleton exists (app directory, layout, pages).
+- Multiple service pages under `src/app/insurance-services/` created.
+- UI components available under `src/components/`.
+- `package.json` and devDependencies configured for Next.js, TypeScript, ESLint, Tailwind.
+- `README.md` present.
+
+What's left / recommended next steps
+------------------------------------
+1) Commit changes to Git
+   - Stage and commit remaining files. If you want remote published to GitHub, add remote and push. VS Code UI can create/publish the repo automatically.
+
+2) Configure Git user identity (if not set globally):
+   - `git config user.name "Your Name"`
+   - `git config user.email "you@example.com"`
+
+3) Add test setup
+   - No test framework is present in `package.json`. Consider adding `vitest` or `jest` and basic tests.
+
+4) CI/CD and linting
+   - Add GitHub Actions or other CI to run `npm test`, `npm run build`, and `npm run lint` on PRs.
+
+5) Accessibility and SEO checks
+   - Run Lighthouse and accessibility audits for key pages.
+
+6) Clean up / housekeeping
+   - Verify `.gitignore` covers OS, IDE, and build artifacts.
+   - Remove large files from history or move to a `assets/` CDN if necessary.
+
+7) Local dev validation
+   - Run `npm install` and `npm run dev` to validate the app builds and runs.
+
+Edge cases / notes
+- The repo currently uses `master` as default branch; consider renaming to `main` for consistency with many services.
+- No test framework configured yet.
+- Binary assets (images) are included; consider size checking before pushing to remote.
+
+Files changed/created by this report
+- tests/project-progress.txt (this file)
+
+Status: Actionable — ready for final commit and optional push to remote.
+
+How I can help next
+- Commit and push to your GitHub repo (you can provide the remote URL or let VS Code publish automatically).
+- Add a basic test harness (Vitest + 1 simple component test).
+- Configure GitHub Actions for CI.
+
+End of report

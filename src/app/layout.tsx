@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import ScrollToTopOnNavigation from "../components/ScrollToTopOnNavigation";
+import StayInTouch from "../components/StayInTouch";
+import Footer from "../components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +30,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+  <ScrollToTopOnNavigation />
         {children}
+        <StayInTouch />
+        <Footer />
       </body>
     </html>
   );

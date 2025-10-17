@@ -1,0 +1,103 @@
+Repository scan: analysis and action items
+Date: 2025-10-16
+
+Summary
+-------
+I scanned the codebase for compile/lint/type errors, missing assets, heavy client-side visuals, and files that may cause runtime churn (Turbopack/OneDrive interaction). This report lists findings and prioritized next actions you can take (I can implement any of them if you want).
+
+Key findings
+------------
+1) Compile / lint errors
+   - `src/app/globals.css`: Unknown at rule `@theme inline` (reported by get_errors). This is the only direct compile/lint error surfaced by the quick scan tool.
+
+2) Missing / broken assets
+   - `src/app/insurance-services/InsuranceServicesPage.tsx` references `/images/products-bg.png` (backgroundImage). That file does NOT exist in `public/images`.
+   - public images present: contractor-hero.jpg, contractor-hero.svg, corporateinsurance.jpg, corporateproperty.jpg, corporateretail.jpg, energy.jpg, factory.jpg, healthcare.jpg, manufacturing.jpg, Proindem.jpg, retail.jpeg, smallbiz.jpg, tradesppl.jpg, transport.jpg
+
+3) Files forcing client rendering (`"use client"`)
+   - Many pages/components are client-only. A non-exhaustive list found by grep:
+     - `src/app/claims/page.tsx`
+     - `src/components/Careers.tsx`
+     - `src/components/Contact.tsx`
+     - `src/components/Footer.tsx`
+     - `src/components/StayInTouch.tsx`
+     - `src/app/get-a-quote/page.tsx`
+     - `src/components/Hero.tsx`
+     - `src/app/insurance-services/InsuranceServicesPage.tsx`
+     - `src/components/Particles.tsx`
+     - `src/components/QuoteForm.tsx`
+     - `src/app/careers/page.tsx`
+     - `src/app/HomePage.tsx`
+     - Multiple `insurance-services/*/page.tsx` files (many service pages)
+     - `src/components/Header.tsx`, `CurvedLoop.tsx`, `Industries.tsx`, `plasmabackground.tsx`, `ServiceHighlights.tsx`, `TestimonialsCarousel.tsx`, `WhyAllied.tsx`, `ScrollToTopOnNavigation.tsx`
+
+   - Note: not all of these must be converted. The pattern to watch for: pages that primarily render static content should be server components (no `"use client"`) to avoid extra client bundle and hydration cost. Interactive pieces should remain client components.
+
+4) Heavy visuals / WebGL / animation
+   - `src/components/LightRays.tsx`, `src/components/Particles.tsx`, `src/components/plasmabackground.tsx` use `ogl` and WebGL; they are expensive at compile and runtime and should be lazy-loaded with `dynamic(() => import(...), { ssr: false })` where appropriate.
+   - `framer-motion` usages appear in multiple components (e.g., InsuranceServicesPage, TestimonialsCarousel, etc.) — framer-motion adds client-side weight; consider limiting to genuinely interactive UIs.
+
+5) API / env usage
+   - The Google Sheets webhook environment variable `GOOGLE_SHEETS_WEBHOOK_URL` is referenced by API routes in `src/app/api/*/route.ts`. The repo contains an `.env` with a webhook URL (verify that this is intentional and non-secret). Make sure secrets are not committed.
+
+6) Dev tooling / Turbopack / OneDrive
+   - You previously saw Turbopack panics and OneDrive can interfere with `.next` writes. If you see OS errors referencing OneDrive or error code 393, pause OneDrive for this folder or move the project out of OneDrive to avoid file I/O conflicts.
+
+7) Misc notes
+   - `package.json` depends on `ogl` and `framer-motion` which are present in lockfile.
+   - Several components import `Image` from `next/image` and require properly sized containers; zero-height parents will make images invisible (we addressed one such case in `ServicePageTemplate.tsx`).
+
+Prioritized todo list (actionable)
+---------------------------------
+Priority A — Fixes to restore dev stability and stop 500/404s
+ 1. Replace or remove missing asset reference `/images/products-bg.png` in `src/app/insurance-services/InsuranceServicesPage.tsx`.
+    - Quick fix: change to an existing image (e.g., `/images/factory.jpg`) or add `products-bg.png` to `public/images`.
+ 2. Resolve the CSS at-rule error in `src/app/globals.css` around `@theme inline`.
+ 3. Clear Next.js cache and restart dev (if you suspect .next corruption): `rmdir /s /q .next` then `npm run dev`. If Turbopack panics continue, start dev without turbopack or pause OneDrive.
+
+Priority B — Performance & routing hardening
+ 4. Convert non-interactive service pages to server components (remove `"use client"` from pages that only render `ServicePageTemplate`). I already converted several (contractors, retail, self-employed pages). Review remaining `insurance-services/*` pages and convert.
+ 5. Lazy-load heavy WebGL/animation components with dynamic import (ssr: false) to reduce dev-time bundling and initial hydration: `const LightRays = dynamic(() => import('../components/LightRays'), { ssr: false });`.
+ 6. Audit and reduce framer-motion usage on pages that don't require animation on first load.
+
+Priority C — Cleanups / safety
+ 7. Review `.env` and remove secrets from repo; replace with `.env.example` for docs.
+ 8. Add runtime fallbacks for images in templates (conditional render of default image if requested asset is missing).
+ 9. Add a small test to render a few pages (or run `next build`) in CI to detect server/runtime errors early.
+
+Suggested immediate commands (Windows cmd.exe)
+---------------------------------------------
+:: clear next cache and start dev
+rmdir /s /q .next
+npm run dev
+
+:: run a production build (will reveal build/runtime errors)
+npm run build
+npm run start
+
+Files/locations to inspect first
+--------------------------------
+- `src/app/insurance-services/InsuranceServicesPage.tsx` — replace missing image and lazy-load `LightRays`.
+- `src/app/globals.css` — fix unknown at-rule `@theme inline`.
+- `src/components/LightRays.tsx`, `Particles.tsx`, `plasmabackground.tsx` — consider dynamic import (ssr:false).
+- `src/app/api/*/route.ts` — verify webhook usage and secrets.
+
+If you want, I can take these actions in this order and push patches:
+ - Replace `/images/products-bg.png` with `/images/factory.jpg` (quick)
+ - Fix `src/app/globals.css` (I can open and propose a fix)
+ - Convert remaining service pages to server components (bulk change)
+ - Lazy-load `LightRays`, `Particles`, and `Plasma` (one-by-one) and validate with `get_errors` and a dev run
+
+Report file location
+--------------------
+I created this report at:
+`reports/repo-scan-analysis.txt`
+
+Next step
+---------
+Tell me which of the prioritized items you want me to implement first. I can (pick one):
+ - Apply the missing-image quick fix now and run the dev server to verify.
+ - Fix the `globals.css` at-rule error.
+ - Convert remaining `insurance-services/*` pages to server components.
+ - Start the dev server and capture the 500/stack traces live for the problematic routes.
+

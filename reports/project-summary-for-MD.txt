@@ -1,0 +1,91 @@
+Allied Insurance Services — Website Project Summary
+Date: 2025-09-24
+Prepared for: Managing Director
+Prepared by: Development Team
+
+Executive summary
+-----------------
+The Allied Insurance Services website is a Next.js (app router) project that has a functional layout, multiple service pages, and a library of reusable components. The core site structure is implemented and ready for content completion, QA, and deployment. The project is currently in a pre-release stage: most pages and UI components exist but require review, content finalisation, and testing.
+
+Current status (high level)
+---------------------------
+- Framework: Next.js 15 with React 19 and TypeScript.
+- Project skeleton: Complete with `src/app` structure, `layout.tsx`, global styles, and page components.
+- Content pages: Many service pages under `src/app/insurance-services/` implemented as page components.
+- Components: Header, Footer, Hero, QuoteForm, TestimonialsCarousel, StayInTouch, and various visual components present in `src/components/`.
+- Utilities: RSS helper in `src/lib/rss.ts` and a script `scripts/inspectRss.js` for RSS inspection.
+- Local development: `package.json` contains scripts to run dev, build, start, and lint.
+- Version control: The repository is initialized locally and changes exist ready to commit/push.
+
+Work completed
+--------------
+- Site architecture and navigation implemented.
+- Core UI components created and wired into pages.
+- Many insurance service pages scaffolded and implemented.
+- Asset folder populated with required images and logos.
+- Build tooling and linting dependencies are declared in `package.json`.
+
+Remaining work (detailed)
+-------------------------
+1. Content finalisation
+   - Proof and approve page copy, imagery, and SEO metadata for each service page.
+   - Localise or adapt any sector-specific language where needed.
+
+2. Visual polish and responsive QA
+   - Cross-device layout testing and adjustments (mobile/tablet/desktop).
+   - Ensure images are optimised for web (responsive sizes and compression).
+
+3. Accessibility and SEO
+   - Run accessibility audits (Lighthouse, axe) and fix issues.
+   - Add structured data (JSON-LD) and meta tags where necessary.
+
+4. Testing
+   - Add unit and integration tests (suggest Vitest + React Testing Library).
+   - Add end-to-end smoke tests for main flows (e.g., get-a-quote form).
+
+5. Performance optimisations
+   - Audit bundle sizes and remove unused dependencies.
+   - Implement lazy-loading for heavy visual components if needed.
+
+6. CI/CD and deployment
+   - Configure GitHub Actions to run lint/build/tests on PRs.
+   - Create deployment pipeline (Vercel recommended for Next.js) and set up preview environments.
+
+7. Security and compliance
+   - Review and secure environment variables and third-party keys.
+   - Ensure HTTPS, CSP, and basic security headers via hosting provider.
+
+8. Final sign-off and go-live
+   - Content approval, final QA, UAT with stakeholders, and schedule go-live.
+
+Risks and considerations
+------------------------
+- Several pages contain placeholder or draft content — this can delay go-live if content is not finalised.
+- Large image assets are included in the repository; before pushing to remote, consider optimising or using CDN storage.
+- No test suite currently — introducing tests early reduces regression risk.
+
+Estimated effort to complete (rough)
+------------------------------------
+- Content finalisation: 1–2 weeks (depending on stakeholder responsiveness).
+- QA & accessibility fixes: 2–5 days.
+- Tests & CI integration: 3–5 days.
+- Deployment setup and verification: 1–2 days.
+
+Immediate recommended next steps
+--------------------------------
+1. Finalise content for all service pages and the homepage.
+2. Commit and push the current repository to the company GitHub organization.
+3. Enable Vercel deployment and set up preview deployments for PRs.
+4. Add basic unit tests and a CI workflow to run them on PRs.
+5. Perform accessibility and performance audits, then prioritise fixes.
+
+Attachments
+-----------
+- `tests/project-progress.txt` — raw inventory and state (developer-focused).
+
+If you'd like, I can:
+- Prepare a short deck (3–5 slides) summarising this report for the MD.
+- Create the GitHub repo, push the code, and set up Vercel deployment.
+- Add a starter test and CI workflow.
+
+End of report

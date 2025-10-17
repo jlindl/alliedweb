@@ -1,0 +1,201 @@
+Production readiness — Detailed checklist and remediation plan
+Date: 2025-10-13
+Repository: allied-website
+
+Purpose
+-------
+This document compiles a detailed production-readiness checklist based on a code scan. It lists current findings, prioritized remediation tasks, file-level notes, verification steps (quality gates), recommended commands and scripts, and follow-up improvements to increase reliability, security, and maintainability before deploying to production.
+
+Summary of current state (from scan)
+-----------------------------------
+- No compile or type errors were detected during the scan.
+- API routes exist for quotes and claims (`src/app/api/quote/route.ts`, `src/app/api/claims/route.ts`) and appear to validate incoming fields and call Supabase.
+- Environment variables (SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY) are required by server routes.
+- Several debug and mock artifacts exist (console logs, mock submit placeholders, debug API route, mock testimonials, comments, @ts-ignore, and `any` usage).
+- WebGL/background components include fallback/error handling but contain noisy logs and `any` usage.
+- Privacy Policy and Terms pages are present but may need a date/legal review.
+
+Acceptance criteria (what "production-ready" means for this repo)
+-----------------------------------------------------------------
+1. Build: `npm run build` finishes successfully in CI and locally.
+2. Lint & types: `npm run lint` and TypeScript type-check pass with no critical `any`/`@ts-ignore` remaining in production-critical paths.
+3. Tests: Minimal unit tests + one E2E smoke test pass (see commands below).
+4. No debug console logs or debug-only routes left in production build.
+5. Environment variables and secrets are loaded securely in CI/CD and not committed to the repo.
+6. APIs return sanitized errors (no internal stack traces) and validate inputs.
+7. Accessibility: basic a11y checks (axe or Lighthouse) pass for main pages.
+8. Observability: error-reporting (Sentry or similar) integrated for server and client errors.
+9. Security basics: CSP, CORS, rate limiting (APIs), and CSP/reporting configured.
+10. Privacy/Legal pages reviewed and updated (dates, contact info, scope).
+
+Priority remediation tasks (short-term, highest impact)
+-----------------------------------------------------
+1. Remove or replace debug logging and debug routes
+   - Files: `src/app/api/claims/route.ts` (console.log), `src/app/api/quote/route.ts` (console.error), `src/app/api/claims/debug/route.ts` (debug handler).
+   - Action: Replace `console.*` with a production logger (winston/pino) or wrap logs behind a debug flag. Delete debug endpoints not intended for production.
+
+2. Secure and validate environment variables
+   - Ensure `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are not present in the repo.
+   - Add `env.example` describing required vars.
+   - Validate presence in CI and fail build early if missing.
+
+3. Remove mock submission code and connect genuine API calls
+   - Files: `src/components/Contact.tsx` (mock submit comment) — implement real POST to `/api/quote` or another route, with client-side validation and UX for success/failure.
+   - Replace placeholder data in `TestimonialsCarousel.tsx` if real testimonials will be loaded from CMS or API.
+
+4. Reduce `any`, `@ts-ignore`, and `eslint-disable` usage
+   - Files flagged: `src/lib/rss.ts` (eslint-disable and any), `plasmabackground.tsx`, `LightRays.tsx`.
+   - Action: Add proper typings or isolate complex areas behind well-typed wrappers.
+
+5. Sanitize and standardize API error responses
+   - Avoid returning raw error messages or stack traces to clients.
+   - Return friendly messages and log detailed errors server-side.
+
+6. Remove debug-only assets and routes from production build
+   - Confirm nothing under `src/app/api/*/debug` is deployed publicly or gate it under an environment flag.
+
+7. Add an `env.example` and `.gitignore` review
+   - Ensure .env files are ignored and sensitive files are never checked in.
+
+Medium-term tasks (nice-to-have before production launch)
+-------------------------------------------------------
+- Add automated tests: unit tests for critical components and API handlers. Add an E2E smoke test (Playwright or Cypress) for primary forms (quote, claim) to exercise server routes.
+- Integrate Sentry or similar for client and server error reporting.
+- Add rate-limiting or spam protections (recaptcha or server-side throttling) to form endpoints to prevent abuse.
+- Add basic metrics/analytics (privacy-friendly) and health check endpoints for uptime checks.
+- Run Lighthouse and axe audits, fix major accessibility issues.
+- Configure cache headers and image optimization policies.
+
+File-by-file checklist and notes (explicit)
+------------------------------------------
+- src/app/api/quote/route.ts
+  - Validates fields and uses `process.env.SUPABASE_*`. Ensure envs are present in CI.
+  - Remove or reduce console.error messages; log to a structured logger.
+  - Sanitize errors returned to clients.
+
+- src/app/api/claims/route.ts
+  - Contains console.log debug statements and dynamic import of supabase client behind comments and @ts-ignore.
+  - Remove debug logs and @ts-ignore; provide type-safe import or a server-only wrapper.
+  - Consider rate limiting and file upload size limits if accepting attachments.
+
+- src/app/api/claims/debug/route.ts
+  - Debug endpoint — either remove or gate under NODE_ENV !== 'production' checks.
+
+- src/components/Contact.tsx
+  - Currently uses a mocked submit (comment indicates replace with API). Hook this up to the real API, add client-side validation, and display sanitized server errors.
+  - Confirm consent checkbox handling and GDPR-friendly copy.
+
+- src/components/QuoteForm.tsx
+  - Sends body as JSON to server. Ensure it matches server expectations (field names) and has client-side validation and UX for required fields.
+
+- src/components/StayInTouch.tsx
+  - Has client-side validation for email; handle server errors robustly.
+
+- src/components/TestimonialsCarousel.tsx
+  - Contains mock testimonials — replace with API-driven data or move mock into a test fixture.
+
+- src/lib/rss.ts
+  - Uses `any` and silences lint rules. If RSS functionality is critical, add precise types or encapsulate parsing logic and fail gracefully when malformed feeds appear.
+
+- src/components/plasmabackground.tsx, LightRays.tsx, Particles.tsx
+  - WebGL features include `any` types and debug logging. Keep fallback behavior for non-WebGL environments. Ensure these modules lazy-load and don't break SSR.
+
+- src/app/privacy-policy/page.tsx & src/app/terms-conditions/page.tsx
+  - Legal pages exist; confirm they're up-to-date and include last-updated dates, contact info, and a straightforward privacy contact.
+
+Security & secrets
+-------------------
+- Required secrets: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY (server-only). Confirm they are provided via your host's secrets mechanism (Vercel/Netlify/AWS Secrets Manager) and NOT committed to git.
+- Add `env.example` listing required env vars and intended scope (server-only vs. client-public).
+- Consider using the least-privileged Supabase key for public-facing routes and the service role only where necessary.
+- Sanitize user inputs before DB inserts and avoid exposing returned DB internals.
+- Add basic security headers and a Content Security Policy (CSP).
+
+Observability & monitoring
+--------------------------
+- Add Sentry or similar for server & client.
+- Add structured logging (JSON) for server API routes.
+- Add a small health-check endpoint for uptime monitoring.
+
+CI/CD and deployment checklist
+------------------------------
+1. Create a CI pipeline (GitHub Actions) with steps:
+   - Checkout, install (npm ci), lint (npm run lint), typecheck (npm run typecheck or tsc --noEmit), test (npm run test), build (npm run build).
+   - Fail fast if env-required variables are not provided (or set a separate job to check secrets existence).
+2. Add a deployment step to your hosting provider (Vercel recommended for Next.js) using environment variables configured in the provider.
+3. Configure preview/staging deployments on PRs.
+
+Quality gates (run locally or in CI)
+------------------------------------
+- Build: npm ci && npm run build
+- Lint: npm run lint
+- Types: npm run typecheck or tsc --noEmit
+- Unit tests: npm run test (jest/ vitest) — add if not present
+- E2E smoke: Playwright or Cypress run against a preview deployment
+
+Commands (copyable)
+--------------------
+# Install deps
+npm ci
+
+# Lint
+npm run lint
+
+# Type-check (if script exists) or
+npm run typecheck
+# or directly
+npx tsc --noEmit
+
+# Build
+npm run build
+
+# Run dev server
+npm run dev
+
+Suggested repo housekeeping additions
+-------------------------------------
+- Add `env.example` with required keys and usage notes.
+- Add `.github/workflows/ci.yml` for CI build + lint + tests.
+- Add `.gitignore` review to ensure no .env or credentials are committed.
+- Add `README.md` production-run subsection explaining envs and deploy steps.
+
+Accessibility
+-------------
+- Run Lighthouse and axe. Fix critical issues (color contrast, focus order, form labels, aria attributes for interactive widgets).
+- Ensure forms have accessible error messaging and focus management on submit errors.
+
+Performance
+-----------
+- Verify images use `next/image` with sized widths and that large hero assets are optimized.
+- Add caching headers for static assets and proper cache-control in server responses where applicable.
+- Consider pre-rendering (SSG) for marketing pages and dynamic rendering for user flows.
+
+Privacy & legal
+----------------
+- Review the `privacy-policy` page text and update the last updated date and contact details.
+- Confirm data retention policy for form submissions stored in Supabase and document it in the privacy policy.
+
+Follow-up improvements (post-launch or later sprints)
+----------------------------------------------------
+- Add E2E tests for the full user flows (quote submission, claim submission, contact form).
+- Add A/B tracking for hero variants and analytics with privacy settings.
+- Harden API with authentication for any administrative endpoints.
+- Add CI-based security scanning (npm audit, Snyk) and dependency update automation.
+
+How I can help next
+-------------------
+- I can create the `env.example` and remove debug endpoints/logging automatically.
+- I can add a GitHub Actions CI config for build/lint/test steps.
+- I can wire up Sentry and create a minimal health-check endpoint.
+- I can run the build/lint/typecheck locally in this environment and report results.
+
+Next recommended immediate actions (what I suggest you do now)
+------------------------------------------------------------
+1. Create `env.example` and confirm secrets in your hosting provider (I can create that file now).
+2. Replace debug console logs and remove `src/app/api/claims/debug` route.
+3. Connect `Contact.tsx` mock to the real API and add client-side validation.
+4. Run `npm ci && npm run build && npx tsc --noEmit && npm run lint` in CI or locally before deploy.
+
+If you want, I can start applying the high-priority changes now (I can create `env.example`, remove debug routes, and replace console logs with a small logger). Tell me which items you'd like me to do first.
+
+End of file

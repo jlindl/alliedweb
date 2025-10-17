@@ -1,0 +1,87 @@
+Production readiness summary
+Date: 2025-10-17
+
+High-level readiness
+--------------------
+Overall readiness: PARTIALLY READY
+Score (0-10): 6/10
+
+Rationale
+---------
+- The app compiles for most files; quick static checks found one CSS at-rule error and many files report no TypeScript/JSX errors.
+- Key functionality (service pages, contact/quote forms, API routes) exists and uses Next.js App Router patterns.
+- Production risks remain: missing static asset, console debug logs in server handlers, environment secrets checked into .env, heavy WebGL/animations that can degrade performance, and no automated tests configured.
+
+Top priority issues (blockers)
+-----------------------------
+1) Missing asset referenced in production code
+   - `src/app/insurance-services/InsuranceServicesPage.tsx` references `/images/products-bg.png` which is missing. This causes repeated 404s in dev and could cause unexpected UI issues in production.
+
+2) CSS unknown at-rule
+   - `src/app/globals.css` contains `@theme inline` which triggers an "Unknown at rule" error from the scanner. Resolve this to ensure consistent builds and PostCSS/Tailwind processing.
+
+3) Secrets in repo
+   - An `.env` with `GOOGLE_SHEETS_WEBHOOK_URL` is present. Confirm whether this is intended; move secrets to environment variables in the deployment and keep `.env` out of source control.
+
+High priority (should fix before launch)
+---------------------------------------
+4) Debug logs and console statements in API routes
+   - Remove or gate console.log/debug in `src/app/api/*/route.ts` and other server files to avoid leaking information in production logs.
+
+5) Heavy client visuals
+   - `LightRays`, `Particles`, and `plasmabackground` rely on `ogl` and WebGL. Lazy-load them (dynamic import with ssr:false) so server and initial client bundles stay light.
+
+6) Client vs Server component mix
+   - Many pages/components are marked `"use client"`. Convert static pages to server components to reduce hydration overhead. Ensure interactive elements stay client-side.
+
+Medium priority (recommended)
+-----------------------------
+7) Tests
+   - No test script or framework is configured. Add unit tests (Vitest + RTL) and a small E2E smoke (Playwright/Cypress) to protect critical flows (quote, claims, stay-in-touch).
+
+8) CI and build validation
+   - Add a CI pipeline to run `npm run build`, `npm run lint`, and tests. This catches build-time errors before deployment.
+
+Lower priority (nice-to-have)
+----------------------------
+9) Add `.env.example` documenting required env vars.
+10) Add fallback images for missing assets in templates.
+11) Audit OneDrive usage and avoid storing the project in a synced folder to prevent file I/O conflicts during builds.
+
+Suggested immediate action plan (ordered)
+-----------------------------------------
+1) Quick fixes (1-2 hours)
+   - Replace `/images/products-bg.png` with an existing image or add the missing asset.
+   - Remove console.log statements from API routes.
+   - Remove `@theme inline` from `src/app/globals.css` or replace with valid CSS/Tailwind configuration.
+
+2) Safety and configuration (2-4 hours)
+   - Remove `.env` from repo, add `.env.example` and document required env vars.
+   - Add `.gitignore` check for `.env*` (already present but verify no secrets are committed).
+
+3) Performance hardening (4-8 hours)
+   - Lazy-load `LightRays`, `Particles`, and `Plasma` components with `dynamic(..., { ssr: false })`.
+   - Convert static service pages to server components (remove `"use client"`) — many already converted.
+
+4) Tests and CI (1-2 days)
+   - Add Vitest + RTL, a simple unit test for `ServicePageTemplate`, and a Playwright smoke test for the main forms.
+   - Add a GitHub Actions workflow to run build, lint, and tests.
+
+How I validated
+----------------
+- Ran a repo-wide static check (errors) and grep searches for common issues (missing images, "use client", console.log, env usage).
+- Reviewed `package.json` for scripts and dependencies.
+- Created `reports/repo-scan-analysis.txt` with detailed findings.
+
+Artifacts I added
+-----------------
+- `reports/repo-scan-analysis.txt` — detailed scan and action items (created earlier).
+- `reports/production-readiness-summary.txt` — this file with readiness score and prioritized plan.
+
+I can implement the high-priority fixes now (pick one):
+- Replace the missing image reference in `InsuranceServicesPage.tsx`.
+- Fix the `globals.css` at-rule and re-run a build.
+- Remove debug console logs from API routes and add masks for production.
+- Create `.env.example` and remove `.env` from the repository.
+
+Which fix would you like me to apply first? If you want the full production hardening run, I can implement the quick fixes, then the performance changes, and finally add tests and a CI config in iterative commits.

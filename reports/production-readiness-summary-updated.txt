@@ -1,0 +1,64 @@
+Production readiness summary — updated after gating logs
+Date: 2025-10-17
+
+Summary
+-------
+This report updates the previous production-readiness assessment after implementing gated logging across API routes and major client/server components.
+
+Quick status
+------------
+- Logging: UPDATED — added `src/lib/logger.ts` and replaced raw console calls in core API routes and major visual components with the gated logger. Verbose logs are disabled in production by default.
+- Missing asset `/images/products-bg.png`: STILL MISSING — referenced by `src/app/insurance-services/InsuranceServicesPage.tsx`.
+- CSS at-rule error: STILL PRESENT — `src/app/globals.css` contains `@theme inline` causing an "Unknown at rule" error.
+- Other console usages: SOME REMAIN — scripts and a few client pages still use console.* (see details below).
+
+Details
+-------
+What was changed
+- Added `src/lib/logger.ts`.
+- Replaced console calls in:
+  - `src/app/api/quote/route.ts`
+  - `src/app/api/claims/route.ts`
+  - `src/app/api/stay-in-touch/route.ts`
+  - `src/lib/rss.ts` (gated)
+  - `src/components/LightRays.tsx`, `src/components/plasmabackground.tsx`, `src/components/Particles.tsx` (gated)
+
+Remaining console usages (examples)
+- `src/app/claims/page.tsx` — `console.error('Claim submit failed', ...)` (client-side page form error logging)
+- `scripts/inspectRss.js` — uses console.log and console.error (development script; okay to keep but note)
+- `src/lib/logger.ts` itself uses console.* to output logs in non-production (intended)
+
+Remaining blockers
+- Missing image: `/images/products-bg.png` referenced in `src/app/insurance-services/InsuranceServicesPage.tsx`.
+- CSS at-rule error in `src/app/globals.css` around `@theme inline` (fix required to avoid build errors under stricter PostCSS/Tailwind configs).
+
+Next recommended actions (prioritized)
+1) Replace the missing background image reference (quick):
+   - Option A: change to existing `/images/factory.jpg` in `InsuranceServicesPage.tsx`.
+   - Option B: add `products-bg.png` to `public/images` if you have the intended asset.
+
+2) Fix `src/app/globals.css`:
+   - Remove or replace `@theme inline` with valid Tailwind directives or PostCSS plugin usage.
+
+3) Clean remaining console usage:
+   - Replace client-page console.error calls with UI-friendly error reporting (and use logger if you want debugging gated).
+   - Optionally convert development scripts to use a debug flag instead of raw console logging.
+
+4) Optional: Replace the simple logger with a structured logging library (pino/winston) if you need JSON logs and integration with log collectors.
+
+Commands to verify
+------------------
+:: clear next cache and start dev
+rmdir /s /q .next
+npm run dev
+
+:: run production build to surface build-time errors
+npm run build
+
+Files created/updated
+---------------------
+- `src/lib/logger.ts` (new)
+- Updated API routes and visual components to use logger
+- `reports/production-readiness-summary-updated.txt` (this file)
+
+I can apply the quick missing-image fix and/or fix `globals.css` now. Which should I do first? If you want both, I can apply both in the same pass and re-run the build to verify.

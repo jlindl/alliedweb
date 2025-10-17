@@ -1,21 +1,23 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #ffffff; /* page background white */
+  --foreground: #0b0b0b; /* primary text black */
+  --accent: #d4af37;     /* gold accent */
+  /* Footer-specific colors (kept inverted for contrast) */
+  --footer-background: var(--foreground);
+  --footer-foreground: var(--background);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* Removed unsupported `@theme inline` at-rule. The theme variables are defined in :root above.
+   If you need theme scoping or alternative font variables, add valid CSS custom properties
+   or Tailwind configuration in `tailwind.config.js` instead. */
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0b0b0b; /* keep dark background */
+    --foreground: #ffffff; /* white text */
+    --accent: #d4af37;     /* keep gold visible in dark mode */
   }
 }
 
@@ -23,4 +25,114 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Enable smooth scrolling site-wide but respect user preference */
+html {
+  /* Use smooth scrolling for user-initiated and programmatic scrolls */
+  scroll-behavior: smooth;
+  /* Improve momentum scrolling on iOS/touch devices */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* If the user prefers reduced motion, disable smooth behavior to respect accessibility */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Small offset for in-page anchors if you have a fixed header (adjust if header height changes) */
+:target {
+  scroll-margin-top: 80px; /* adjust as needed for fixed headers */
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Styles moved from src/app/cleaning/[id]/page.tsx (styled-jsx) */
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.03; transform: scale(1); }
+  50% { opacity: 0.06; transform: scale(1.05); }
+}
+@keyframes pulse-slow-delay {
+  0%, 100% { opacity: 0.04; transform: scale(1); }
+  50% { opacity: 0.07; transform: scale(1.08); }
+}
+.animate-pulse-slow {
+  animation: pulse-slow 8s ease-in-out infinite;
+}
+.animate-pulse-slow-delay {
+  animation: pulse-slow-delay 10s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+.article-container {
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 
+    0 8px 32px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    inset 0 -1px 0 rgba(0,0,0,0.2);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.premium-button {
+  background-size: 200% auto;
+  position: relative;
+  overflow: hidden;
+}
+.premium-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
+  transform: translateX(-100%);
+  transition: transform 600ms ease;
+}
+.premium-button:hover::before {
+  transform: translateX(100%);
+}
+
+.bg-size-200 { background-size: 200% auto; }
+.bg-pos-0 { background-position: 0% center; }
+.bg-pos-100 { background-position: 100% center; }
+
+/* Enhanced prose styling */
+.prose h1, .prose h2, .prose h3 {
+  color: #fff;
+  font-weight: 700;
+}
+.prose a {
+  color: #D4AF37;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+.prose a:hover {
+  color: #FFD700;
+}
+.prose p {
+  margin-bottom: 1rem;
+}
+.prose strong {
+  color: rgba(255,255,255,0.95);
+  font-weight: 600;
 }

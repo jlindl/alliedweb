@@ -1,0 +1,140 @@
+Allied Insurance Services — Page-by-Page Content Request
+Date: 2025-09-24
+Prepared for: Managing Director / Content Owner
+Prepared by: Development Team
+
+Purpose
+-------
+This document lists every page and template currently in the project and asks for precise content for each. Please answer the questions under each page so developers and content editors can finalise copy, imagery, calls-to-action (CTAs), SEO metadata, and compliance notes.
+
+How to respond
+--------------
+For each page below, provide:
+- Final page title (H1)
+- 1–2 paragraph lead (intro) copy (50–120 words)
+- 3–8 supporting bullet points or feature highlights
+- 2–4 required images (describe content, suggested aspect ratio, and whether photos/illustrations)
+- Primary CTA text and destination URL (e.g., Get a quote → /get-a-quote)
+- Secondary CTA (optional)
+- SEO meta title (max 60 chars) and meta description (120–160 chars)
+- Any legal or compliance notes (disclaimers, regulated language)
+- Priority (High / Medium / Low) for publishing
+
+Site-wide items (apply across pages unless specified)
+- Company name to display in header/footer: Allied Insurance Services
+- Contact CTA: "Get a quote" → `/get-a-quote`
+- Phone to display (if any): [Please provide]
+- Privacy policy: `/privacy-policy` - ensure the footer links to this
+
+Pages — Homepage and App Root
+--------------------------------
+1) `src/app/page.tsx` — Homepage
+- Current contents: Home layout + hero component
+Questions (please provide the items listed above):
+
+2) `src/app/HomePage.tsx` — (appears to be an alternate or legacy homepage)
+- Is this the active homepage or a legacy/alternate? If active, provide same content fields as above.
+
+Contact & Forms
+----------------
+3) `src/app/contact/page.tsx` — Contact / Contact Form
+- What contact methods should appear (phone, email, form)?
+- Should the contact form capture: name, email, phone, organisation, message, insurance type, budget?
+- Privacy note to show on the form: [provide text or confirm default site privacy note]
+
+4) `src/components/QuoteForm.tsx` — Quote form component (used on pages)
+- Confirm required fields and validation rules.
+
+Get a Quote
+-----------
+5) `src/app/get-a-quote/page.tsx` — Get a Quote landing
+- Purpose: lead capture for quote requests.
+- Fields and any insurer partner selection needed?
+
+Insurance Services (directory)
+------------------------------
+6) `src/app/insurance-services/page.tsx` — Services listing page
+- Should list service categories with short intros and links to service pages. Provide a short intro for this listing page.
+
+Service detail pages (template + individual pages)
+--------------------------------------------------
+We spotted a template `ServicePageTemplate.tsx` and many individual folders. For each service page below, please provide the content checklist described above. If content can be templated (same H1/intro/CTAs), note that.
+
+[For MD: each service below needs a 50–120 word intro, 3–6 bullet benefits, images, CTA, SEO metadata.]
+
+7) `insurance-services/care-and-charity/page.tsx`
+8) `insurance-services/cleaning-contractors/page.tsx`
+9) `insurance-services/commercial-combined/page.tsx`
+10) `insurance-services/commercial-motor-insurance/page.tsx`
+11) `insurance-services/contractors-and-tradesmen/page.tsx`
+12) `insurance-services/corporate-energy-utilities/page.tsx`
+13) `insurance-services/corporate-financial-professional-services/page.tsx`
+14) `insurance-services/corporate-healthcare-life-sciences/page.tsx`
+15) `insurance-services/corporate-insurance/page.tsx`
+16) `insurance-services/corporate-logistics-transport/page.tsx`
+17) `insurance-services/corporate-manufacturing/page.tsx`
+18) `insurance-services/corporate-real-estate-property/page.tsx`
+19) `insurance-services/corporate-retail/page.tsx`
+20) `insurance-services/corporate-technology-media/page.tsx`
+21) `insurance-services/cyber-and-data-breach-insurance/page.tsx`
+22) `insurance-services/directors-and-officers-liability-insurance/page.tsx`
+23) `insurance-services/home-high-value-other/page.tsx`
+24) `insurance-services/hospitality/page.tsx`
+25) `insurance-services/landscape-gardeners/page.tsx`
+26) `insurance-services/legal-insurance/page.tsx`
+27) `insurance-services/manufacturing-and-wholesale/page.tsx`
+28) `insurance-services/marine/page.tsx`
+29) `insurance-services/motor-high-value-other/page.tsx`
+30) `insurance-services/motor-trade-insurance/page.tsx`
+31) `insurance-services/offices-and-surgeries/page.tsx`
+32) `insurance-services/professional-indemnity/page.tsx`
+33) `insurance-services/professional-indemnity-insurance/page.tsx`
+34) `insurance-services/property-owners-commercial-residential/page.tsx`
+35) `insurance-services/public-liability-small-businesses/page.tsx`
+36) `insurance-services/retail-shops/page.tsx`
+37) `insurance-services/self-employed-contractors-and-sub-contractors/page.tsx`
+38) `insurance-services/tradespeople/page.tsx`
+39) `insurance-services/travel/page.tsx`
+
+Other site pages
+----------------
+40) `src/app/claims/page.tsx` — Claims information page
+- What claims process details should be shown? Contact details? Links to forms?
+
+41) `src/app/cleaning/page.tsx` and `src/app/cleaning/*` — Cleaning service landing and detail pages
+- Confirm whether these overlap with `insurance-services/cleaning-contractors` or are unique.
+
+42) `src/app/complaints/page.tsx` — Complaints procedure
+- Provide formal complaints handling text we should display.
+
+43) `src/app/privacy-policy/page.tsx` — Privacy policy
+- Attach final policy text or confirm that the legal team will provide it.
+
+44) `src/app/terms-conditions/page.tsx` — Terms & Conditions
+- Attach final terms or confirm legal team will provide.
+
+Components & Repeated content
+-----------------------------
+45) Header & Footer (`src/components/Header.tsx`, `Footer.tsx`)
+- Confirm top-level nav items (Home, Insurance Services, Get a Quote, Contact, Privacy/Terms).
+- Footer quick links (provide list), address, phone, and copyright line.
+
+46) `StayInTouch.tsx` — Newsletter/signup
+- Confirm if you want an email signup; if so, provide placeholder copy and whether GDPR-opt-in is needed.
+
+47) Visual components (Hero, TestimonialsCarousel, Particles, Plasma)
+- Confirm imagery style (photography vs abstract), brand colours, and whether to keep heavy animations for performance reasons.
+
+Priority and timeline suggestion
+-------------------------------
+Please mark each page with Priority: High / Medium / Low and any target publish dates.
+
+Final notes
+-----------
+If you prefer, we can pre-fill templated content for all service pages using standardised copy which you can then edit. Indicate whether you would like:
+- Full pre-fill (devs write draft copy for all pages), or
+- Outline only (MD provides final copy for each page).
+
+Please respond inline in this document or provide a separate CSV/Google Sheet with the same fields for each page. Once we have content, we will complete the pages, run QA, and publish.
+
+End of document
