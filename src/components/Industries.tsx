@@ -95,7 +95,7 @@ const Industries: React.FC<IndustriesProps> = ({ className }) => {
             </div>
 
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 leading-tight bg-clip-text text-transparent bg-gradient-to-br from-white via-white to-white/90 drop-shadow-2xl">
-              Specialized Insurance Solutions
+              Specialised Insurance Solutions
             </h2>
             <div className="w-24 h-0.5 mx-auto rounded-full bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent mb-5 shadow-lg shadow-[#D4AF37]/30" />
             <p className="inline-block text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#FFD700] via-[#D4AF37] to-[#C9A635] mb-6">Across Key Industries</p>

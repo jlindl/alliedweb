@@ -12,14 +12,12 @@ import { FaHammer, FaShieldAlt, FaBuilding, FaUtensils, FaIndustry, FaWrench, Fa
 // Only show the canonical list of cards supplied by the user.
 const commercialServices = [
   { title: 'Builders & Building Contractors', blurb: 'Insurance for building contractors, site risks and contract works.', path: '/insurance-services/contractors-and-tradesmen' },
-  { title: 'Self‑Employed Contractors & Sub‑Contractors', blurb: 'For independent tradespeople and contractors.', path: '/insurance-services/self-employed-contractors-and-sub-contractors' },
   { title: 'Professional Indemnity (Architects, Engineers, Accountants)', blurb: 'Professional services PI and support.', path: '/insurance-services/professional-indemnity' },
   { title: 'Public Liability for Small Businesses', blurb: 'Liability protection for small companies.', path: '/insurance-services/public-liability-small-businesses' },
   { title: 'Retail & Shops', blurb: 'Insurance for retail operations and shops.', path: '/insurance-services/retail-shops' },
   { title: 'Tradespeople (Carpenters, Electricians, Plumbers)', blurb: 'Tools, liability and trade packages.', path: '/insurance-services/tradespeople' },
   { title: 'Corporate Insurance & Risk Management', blurb: 'Enterprise-grade risk and insurance solutions.', path: '/insurance-services/corporate-insurance' },
   { title: 'Corporate Manufacturing', blurb: 'Property, plant and stock for manufacturers.', path: '/insurance-services/corporate-manufacturing' },
-  { title: 'Corporate Retail', blurb: 'Retailer liability, stock and business interruption cover.', path: '/insurance-services/corporate-retail' },
   { title: 'Corporate Logistics & Transport', blurb: 'Fleet, goods in transit and logistics risk cover.', path: '/insurance-services/corporate-logistics-transport' },
   { title: 'Corporate Real Estate & Property', blurb: 'Property owners and real estate portfolios.', path: '/insurance-services/corporate-real-estate-property' },
   { title: 'Corporate Financial & Professional Services', blurb: 'Specialist programs for financial and professional firms.', path: '/insurance-services/corporate-financial-professional-services' },
