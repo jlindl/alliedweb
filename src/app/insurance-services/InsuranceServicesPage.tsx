@@ -127,17 +127,7 @@ export default function InsuranceServicesPage() {
                 Commercial
               </button>
 
-              <button 
-                aria-pressed={category === 'personal'} 
-                title="Toggle category" 
-                type="button" 
-                onClick={toggleCategory} 
-                className="toggle-btn inline-flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-br from-white/[0.06] to-white/[0.02] border border-white/10 text-[#D4AF37] hover:bg-white/[0.08] hover:scale-110 hover:rotate-180 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/50 transition-all duration-500 shadow-inner"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                </svg>
-              </button>
+              {/* Removed switching arrows button for cleaner toggle UI */}
 
               <button 
                 type="button" 
