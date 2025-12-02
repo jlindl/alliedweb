@@ -2,8 +2,11 @@
 import { useRouter } from 'next/navigation';
 import { Hero } from "../components/Hero";
 import Industries from '../components/Industries';
-import WhyAllied from "../components/WhyAllied";
-import TestimonialsCarousel from "../components/TestimonialsCarousel";
+import dynamic from 'next/dynamic';
+
+// Avoid SSR markup for components affected by extension-injected attributes
+const WhyAllied = dynamic(() => import('../components/WhyAllied'), { ssr: false });
+const TestimonialsCarousel = dynamic(() => import('../components/TestimonialsCarousel'), { ssr: false });
 
 export default function Home() {
   const router = useRouter();

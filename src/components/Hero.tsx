@@ -131,7 +131,7 @@ export function Hero({ title, subtitle, onPrimary }: HeroProps) {
 
           <div className="flex flex-wrap gap-4 items-center animate-fadein-up" style={{ animationDelay: "0.15s" }}>
             <a 
-              href="/quote" 
+              href="/get-a-quote" 
               className="premium-button-primary group relative overflow-hidden rounded-full px-8 py-4 text-base font-bold text-black bg-gradient-to-r from-[#FFD700] via-[#D4AF37] to-[#C9A635] bg-size-200 bg-pos-0 hover:bg-pos-100 transition-all duration-400 transform-gpu hover:-translate-y-1 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-[#D4AF37]/40 shadow-lg shadow-[#D4AF37]/30 hover:shadow-xl hover:shadow-[#D4AF37]/50"
             >
               <span className="relative z-10 flex items-center gap-2">
