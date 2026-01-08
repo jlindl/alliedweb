@@ -100,7 +100,7 @@ export default function InsuranceServicesPage() {
       <div className="relative z-10">
         <section className="max-w-7xl mx-auto px-6 py-12">
           <h1 className="relative text-center text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#D4AF37]">
-            Product Gallery
+            Insurance services
             <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <ShinyText text="Product Gallery" disabled={false} speed={5} className="text-transparent bg-clip-text mix-blend-screen" />
             </span>
