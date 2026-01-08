@@ -102,7 +102,7 @@ export default function InsuranceServicesPage() {
           <h1 className="relative text-center text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#D4AF37]">
             Insurance services
             <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <ShinyText text="Product Gallery" disabled={false} speed={5} className="text-transparent bg-clip-text mix-blend-screen" />
+              <ShinyText text="Insurance services" disabled={false} speed={5} className="text-transparent bg-clip-text mix-blend-screen" />
             </span>
           </h1>
           <div className="mt-6 flex justify-center">
