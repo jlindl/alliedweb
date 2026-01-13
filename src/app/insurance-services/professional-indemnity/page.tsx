@@ -9,7 +9,7 @@ export default function Page() {
     <ServicePageTemplate
       title="Professional Indemnity"
       paragraphs={["Professional services firms face high stakes: one oversight can result in claims, investigations, or reputational damage."]}
-      ctaLabel="Talk to a Professional Indemnity (Architects, Engineers, Accountants) Insurance Expert"
+      ctaLabel="Talk to a Professional Indemnity Insurance Expert"
       imageSrc="/images/Proindem.jpg"
       activePath="/insurance-services/professional-indemnity"
       highlights={{
