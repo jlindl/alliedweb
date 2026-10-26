@@ -131,6 +131,7 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row justify-between items-center text-sm gap-3">
             <div>&copy; {new Date().getFullYear()} Allied Insurance Services. All rights reserved.</div>
             <div className="flex items-center gap-4">
+              <a href="https://www.integrate-tech.co.uk" target="_blank" rel="noopener" className="underline">Website by Integrate Tech</a>
               <a href="#top" className="underline text-white">Back to top</a>
             </div>
           </div>
